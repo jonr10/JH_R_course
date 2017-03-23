@@ -1,0 +1,495 @@
+---
+title: "Learn to R: John Hopkins week 1 & 2"
+author: "Jonathan Roberts"
+date: "18 March 2017"
+output:
+  html_notebook: default
+  html_document: default
+  pdf_document: default
+---
+
+##Global RMarkdown Parameters
+Are set here
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Install the R markdown packages and library
+
+```{r message = FALSE, warning = TRUE}
+libraries <- c("rmarkdown")
+
+#UNCOMMENT TO INSTALL PACKAGES
+#lapply(libraries, install.packages)
+lapply(libraries, library, character.only = TRUE)
+```
+
+
+# Working Directory: 
+Set up where you are working and what is in the directory and what objects you have
+
+```{r}
+
+# SET THE WORKING DIRECTORY
+setwd("/Users/jonathanroberts/Documents/R/John_Hopkins_Rbasics")
+dir()
+ls()
+
+```
+
+
+# Basics
+Let's do some super basic putting things into variables, vectors, etc. Remember as vectors and matrices only contain one type of object, numberic, character, etc
+
+```{r}
+number<-5
+number
+print(number)
+
+num_vector<-11:50
+num_vector
+
+charact<-"hello"
+charact
+
+charact_vec<-c("Ella","Ariane")
+charact_vec
+#Now stick these together
+charact_vec<-c(charact,charact_vec)
+charact_vec
+#Now give the objects names
+names(charact_vec) <-c("greeting", "first_name","middle_name")
+charact_vec
+
+num<-vector(mode = "numeric",length = 10)
+num
+
+is.na(num)
+
+
+```
+
+#Converting Vectors
+now we are going to some converting of vectors - NOTE this causes funny things to happen. R Let's you convert vectors between types, but doesn't tell you when this causes "bad" things to happen. 
+
+```{r}
+x<-0:6
+x
+as.logical(x)
+as.character(x)
+
+x_list <- list(1:4, c("a","b"), T, 1+4i)
+x_list
+# we can give the lists entries names too
+names(x_list) <- cbind("num", "char","logi","complex")
+x_list
+
+```
+
+#Matrices
+Matrices are special types of VECTORS, so again be careful when manipulating them. i.e. 2d ones. That cotain one type of data. While dataframes can be made up of vectors (i think) of different types.
+
+```{r}
+
+mat <- matrix(nrow = 5, ncol = 6)
+mat
+dim(mat)
+attributes(mat)
+mat <- matrix(1:30, nrow = 5, ncol = 6)
+mat
+mat[,1]
+
+i_vet_to_mat <- 1:12
+i_vet_to_mat
+dim(i_vet_to_mat) <- c(2,6)
+i_vet_to_mat
+
+
+a<-1:5
+b<-11:15
+col_a_b<-cbind(a,b)
+dim(col_a_b)
+row_a_b<-rbind(a,b)
+row_a_b
+
+```
+
+#Basic vector operations
+Now just do basic vector operations
+```{r}
+a
+b
+a*b
+a+b
+2*a
+2+a
+
+```
+
+#Factors
+FACTORS are for categorical variables - i don't really care about these. But these are really good to use if you have categorical valiables, as you code in the definitions, not just useing 1 and 2 for Male, female for example...
+
+
+```{r}
+#no code here
+
+```
+
+
+# Dataframes
+DATAFRAME: now we are gong to play around with DataFrame a bit
+Remember for example Transposing dataframes has gone wrong before because if the vectors are of different type when you transpose R can force numbers to become characters and other bad things! 
+
+
+```{r}
+x_df <- data.frame(foo=1:4,bar = c(T,T,F,F))
+x_df
+
+nrow(x_df)
+ncol(x_df)
+```
+
+#Reading in data sets
+READING IN DATA SETS
+
+Now we start learning how to read in data... Note there are different ways to read in big and small data sets. read.table has really a useful help page. Read it!!!
+
+
+```{r}
+#read.table and read.csv will be used most and have lots of arguments to make sure you read it in properly
+#strings as Factors is really important so it knowns whether to read in as text or a categorical variable.
+
+in_df <- read.csv("simple_table.csv")
+in_df1 <-read.table("simple_table.csv")
+
+in_df
+attributes(in_df)
+as.matrix(in_df)
+in_mat1<-as.matrix(in_df1)
+
+```
+
+
+#READING OUT DATA in TEXTUAL FORMATS : SPECIAL WAYS
+You can dump or dput as this outputs the metadata for you - easier for future reference.
+
+It is really useful for outputting and reading back in dataframes and lists etc
+
+This can also help with git - and version control software
+
+
+```{r}
+
+y_df <- data.frame(foo=1:5, bar = c(T,T,F,F,T), now = c("a","b","c", "d", "e"))
+y_df
+dput(y_df)
+dput(y_df,file= "y_df.R")
+new_y <- dget("y_df.R")
+new_y
+
+getwd()
+```
+
+
+
+
+Now let's write a basic function to do something
+
+```{r}
+
+average <- function(x)
+  mean(x)
+
+#ls()
+
+average(1:3)
+y1<-c(1 , 1, 1, 2, 3)
+average(y1)
+
+```
+
+#SUBSETTING: 
+###Vectors
+this is tricky intially but get it some thought and pretty simple
+basically - [] extracts from vector, [[]] and $ extract from a list.
+first we'll play around with using [] to extract and subset from a vector
+
+```{r}
+x <- c("a", "b", "c", "d", "a")
+x[1]
+x[1:3]
+x[x> "b"]
+u<-x>"a"
+u
+#note u is a logical vector? operator with tests if entries in x are >a
+v<-x[x> "b"]
+v
+#v is the subset of elements of x>b
+
+x[u] # now we are using the logical operator to return the 'true' elements.
+```
+
+###Lists
+Now we play around with lists, and extracting and subsetting
+It now becomes important and useful that we gave our list names earlier
+
+```{r}
+x_list # remember that we defined this earlier 
+attributes(x_list)
+
+# so we take out the a list as [ always returns the same thing 
+x_list[1]
+
+# now we just get a sequence
+x_list[[1]]
+
+# we can also call to the name of the list element - the fist two are the same - the third is different as it returns a list, not just what you called.
+x_list$char
+x_list[["char"]]
+x_list["char"]
+
+
+```
+
+
+#Week 2: Control structures
+So if, For, while, etc
+
+## If, elseif, else
+Not there are to identical ways of doing this
+```{r}
+x<-7
+if(x>3){
+  y<-10
+} else {
+  y<-0
+}
+y
+
+```
+
+So you can have the whole assignment outside
+
+```{r }
+x<-7
+y<-if(x>3){
+  10
+} else {
+  0
+}
+y
+
+```
+
+## For loops
+Very basic version
+```{r}
+for(i in 1:4) {
+  print(i)
+}
+
+```
+
+Now these are the same thing but difference syntax
+```{r}
+x<-c("a", "b", "c", "d")
+for(i in 1:4) {
+  print(x[i])
+}
+
+for (i in seq_along(x)){  # creates an integer sequence the length of the vector
+   print(x[i])
+}
+
+for(i in 1:4) print(x[i])
+
+```
+ 
+##Nested for loops
+Basic use in matrices
+
+```{r}
+x<-matrix(1:6,2,3)
+x
+for (i in seq_len(nrow(x))){
+  for (j in seq_len(ncol(x))){
+    print(x[i,j])
+  }
+}
+
+```
+
+##While loops
+
+```{r}
+z<-5
+y<-z
+while(z>3&&z<10) {
+  coin <- rbinom(1,1,0.5)
+  if (coin ==1) {
+    z<-z+1
+  } else {
+    z<-z-1  
+    }
+  print(z)
+  y<-c(y,z)
+}
+y
+#plot(y)
+
+```
+
+## Other control structures
+Repeat, Next, break: Not going to do anything with these at this point
+Next allows you to skip iterations in a loop.
+Break allows you to break out of a loop
+
+```{r}
+#No code here
+print("No code here")
+```
+#Writing functions 
+##Writing some basic functions
+
+```{r}
+add2<-function(x,y){
+  x+y
+}
+add2(4,5)
+
+above10<-function(x){
+  use <- x>10
+  x[use]
+}
+
+above <- function (x,n=10){ # now n =10 is the default value
+  use <- x>n
+  x[use]
+}
+y<-1:20
+above(y,4)
+above(y)
+
+
+```
+##writing functions to look inside dataframes or matrices
+
+```{r}
+
+columnmean <- function(x, removeNA=TRUE){
+   nc <-ncol(x)
+   means <- numeric(nc)
+   for(i in 1:nc){
+     means[i]<-mean(x[,i], na.rm = removeNA) # note na.rm is an argument/option in function mean
+   }
+  means
+}
+
+columnmean(my_matrix)
+
+```
+
+## Argument Matching.
+Arguments can be matched by position or name, you can call a function by name out of order, then R goes back to matching by order. This can be useful but also lots of scope for confusion! 
+
+So for example all the following are IDENTICAL...
+
+```{r}
+
+mydata<-rnorm(100)
+sd(mydata)
+sd(x=mydata)
+sd(x=mydata, na.rm = FALSE)
+sd(na.rm = FALSE, x=mydata)
+sd(na.rm = FALSE, mydata)
+
+```
+
+But calling to specific arguments when there are long lists of arguments in a function can be very useful..
+
+## Lazy evalution
+If you define excessive arguments R doesn;t can as long as the rest of the code is valid.
+```{r}
+f<-function(a,b){
+  a*a
+}
+f(2)
+
+```
+
+## The "..." Argument
+"..." denotes 'the rest of the arguments' and can be useful for extending another function. One example is if you want to define a personal plot style, while maintaining all the rest of the arguments. 
+Here you are are setting your favourite 'type'  
+
+```{r}
+myplot<-function(x,y,type="1",...){
+  plot(x,y,type=type,...)
+}
+```
+
+
+
+
+##Lexical Scoping
+This is a bit complex and seems fairly niche initially. It basically seems to define the rules of what happens as if you call to a variable not passed to a function, inside a function. R goes through the function, it's parent function, the environment you are coding in, then all your libraries that you have installed in a specific order to look for that variable. This seems to be a recipe for disaster but is apparently useful...
+
+There is a similar thing if you call a function you define with the same name as an existing function. You can do that and it will choose yours from the global environment.
+
+You can find the order by call search()
+
+```{r}
+search()
+```
+
+So for example in the following function r tries to go off to find z...
+```{r}
+f<-function(x,y){
+  x + y/z
+}
+```
+
+
+###Using lexical scoping to define functions in functions
+Not sure i totally get where this would be useful yet.
+not that only the x is passed to the central function but it uses the n from the outer function
+
+```{r}
+make.power <- function (n) {
+  pow<-function(x) {
+    x^n
+  }
+}
+cube<-make.power(3)
+square<-make.power(2)
+
+cube(4)
+
+```
+###Looking in a functions environment
+You can look in a functions environment and see what those values are set at.
+
+```{r}
+ls(environment(cube))
+get("n", environment(cube))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
