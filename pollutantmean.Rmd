@@ -42,7 +42,7 @@ Write a function named 'pollutantmean' that calculates the mean of a pollutant (
 
 ```{r}
 
-pollutantmean <- function(directory, pollutant, id=1:332){
+pollutantmean <- function(directory, pollutant, id = 1:332){
     ##directory is a character vector of length 1 indicating the location of the CCSV        files
     ## pollutant is a character vector of length 1 indicating which pollutant we want to call data on: either sulfate or nitrate
     ## id is the intedger vector indicating which monitor station we want
@@ -50,12 +50,38 @@ pollutantmean <- function(directory, pollutant, id=1:332){
     
     
     # we want a bit of the function to read csv
-    filename<-
-    read.csv(file = "filename")
-    
-    
+    ## TO FIX: ONLY WORKS IF ID>=100
+    getwd()    
+    folder<-paste(getwd(),directory,id, sep = "/")
+    filename<-paste(folder,"csv", sep=".")
+    pollute_data<-read.csv(file = filename)
+    colnames(pollute_data) 
+
+    data_choice<-pollute_data[[pollutant]]
+    data_choice
+    mean(data_choice, na.rm = TRUE)
     
 }
+
+pollutantmean("specdata", "sulfate", id = 100)
+ 
+
+
+    directory<-"specdata"
+    id1<-100
+    id2<-101
+    pollutant<-"sulfate"
+    
+    
+    getwd()    
+    folder<-paste(getwd(),directory,id, sep = "/")
+    filename<-paste(folder,"csv", sep=".")
+    pollute_data<-read.csv(file = filename)
+    colnames(pollute_data) 
+
+    data_choice<-pollute_data[[pollutant]]
+    data_choice
+    mean(data_choice, na.rm = TRUE)
 
 
 
