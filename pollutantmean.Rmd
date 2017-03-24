@@ -68,22 +68,38 @@ pollutantmean("specdata", "sulfate", id = 100)
 
 
     directory<-"specdata"
-    id1<-100
-    id2<-101
+    id<-200:240
     pollutant<-"sulfate"
     
-    
+    #first data set
     getwd()    
     folder<-paste(getwd(),directory,id, sep = "/")
     filename<-paste(folder,"csv", sep=".")
-    pollute_data<-read.csv(file = filename)
-    colnames(pollute_data) 
+    filename # this is a vector of filenames!
+    
+    ## Aboce here is vectorised, below is not#########
 
-    data_choice<-pollute_data[[pollutant]]
-    data_choice
-    mean(data_choice, na.rm = TRUE)
+    ##Function still doesn;t really work for numbers <100
+    ##TODO, not sure i really need the if (i==1) loop or i can 'initialise' another way.
 
-
+    for (i in seq_along(id)) {
+        pollute_data<-read.csv(file = filename[i])
+        if(i == 1){
+            full_data_df<-pollute_data
+            check_row<-nrow(pollute_data)
+        }
+        else{
+            full_data_df<-rbind.data.frame(full_data_df,pollute_data)
+            check_row <- check_row + nrow(pollute_data)    
+        }
+    }
+    #TEST IF WE HAVE EQUAL rows i nour data and our data.frame
+    nrow(full_data_df) == check_row
+    full_data_choice<-full_data_df[[pollutant]]
+    mean(full_data_choice, na.rm = TRUE)
+    
+            
+  
 
 ```
 
