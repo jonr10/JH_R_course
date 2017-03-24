@@ -46,7 +46,7 @@ pollutantmean <- function(directory, pollutant, id = 1:332){
     ##directory is a character vector of length 1 indicating the location of the CCSV        files
     ## pollutant is a character vector of length 1 indicating which pollutant we want to call data on: either sulfate or nitrate
     ## id is the intedger vector indicating which monitor station we want
-    ## overall function returns the mean of the pollutant - ignoring NA's
+    ## overall function returns the mean of the pollutant, across all files - ignoring NA's
    
  
     #Fuck about making the adding 00's to numbers <100 then paste with id
@@ -91,8 +91,53 @@ pollutantmean("specdata", "nitrate", id = 23)
 
 ```
 
+
+#Part 2
+
+Write a function that reads a directory full of files and reports the number of completely observed cases in each data file. The function should return a data frame where the first column is the name of the file and the second column is the number of complete cases. A prototype of this function follows
+
+
+You can see some example output from this function. The function that you write should be able to match this output. Please save your code to a file named complete.R. To run the submit script for this part, make sure your working directory has the file complete.R in it.
+
+```{r}
+
+corr <- function(directory, threshold = 0){
+    ## directory is a character vector of length 1 indicating the location of the CSV files
+    ## threshold is the numeric vector indicating the minimum number of completely observed observations to compute the correlations.
+    
+    ## General logic:
+    # Read in one file
+    # work out all the obeserved files probably using any or all
+    # count for that file
+    # loop around
+    
+}
+    
+
+```
+
+Part 3
+
+Write a function that takes a directory of data files and a threshold for complete cases and calculates the correlation between sulfate and nitrate for monitor locations where the number of completely observed cases (on all variables) is greater than the threshold. The function should return a vector of correlations for the monitors that meet the threshold requirement. If no monitors meet the threshold requirement, then the function should return a numeric vector of length 0. A prototype of this function follows
+
+For this function you will need to use the 'cor' function in R which calculates the correlation between two vectors. Please read the help page for this function via '?cor' and make sure that you know how to use it.
+
+You can see some example output from this function. The function that you write should be able to match this output. Please save your code to a file named corr.R. To run the submit script for this part, make sure your working directory has the file corr.R in it.
+
+```{r}
+complete <- function(directory, id = 1:332){
+    ## directory is a character vector of length 1 indicating the location of the CSV files
+    ## id is the intedger vector indicating which monitor station we want
+
+}
+```
+
+
+
 # Sandbox 
 Place to experiment before dropping something that works into the function.
+
+## Part 1 sandbox
 
 ```{r}
  directory<-"specdata"
