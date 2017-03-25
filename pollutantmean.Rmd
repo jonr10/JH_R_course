@@ -2,7 +2,9 @@
 title: "Week 2 assignment"
 author: "Jonathan Roberts"
 date: "24 March 2017"
-output: html_document
+output: 
+    html_notebook: default
+    html_document: default
 ---
 
 #Get up and running
