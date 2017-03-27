@@ -172,11 +172,54 @@ corr <- function(directory, threshold = 0){
     ## threshold is the numeric vector indicating the minimum number of completely observed observations to compute the correlations.
     
     
-    # In the cor function you can pass both variable together in a matrix/data frame
+    #directory<-"specdata"
+    id<-1:332
+    #threshold =  150 
     
+    #Fuck about making the adding 00's to numbers <100 then paste with id
+    len_00=length(id[id<10])
+    len_0=length(id[id>=10&id<100])
+    len=length(id)-len_0-len_00
+    
+    zeros<-c(rep("00", times = len_00), rep("0", times = len_0), rep("", times = len))
+    full_id<-paste(zeros,id,sep = "")
+
+    #first data set
+    folder<-paste(getwd(),directory,full_id, sep = "/")
+    filename<-paste(folder,"csv", sep=".")
+
+    #Loop around reading in data; then store it and do a bit of analysis
+    ##Could this be done without the If i==1 loop? 
+    for (i in seq_along(id)) {
+        pollute_data<-read.csv(file = filename[i])
+        both_df<-pollute_data[(!is.na(pollute_data$sulfate) & !is.na(pollute_data$nitrate))==TRUE,]
+        corr_vec<-cor(both_df$sulfate, both_df$nitrate)
+        if(i == 1){
+            #full_data_df<-pollute_data
+            #check_row<-nrow(pollute_data)
+            complete_data_df<-both_df
+            complete_summary <- matrix(c(pollute_data[1,"ID"],nrow(both_df),corr_vec), nrow=1,ncol=3) 
+            colnames(complete_summary) <- c("id","nobs", "corr")
+        }
+        else{
+            #full_data_df<-rbind.data.frame(full_data_df,pollute_data)
+            #check_row <- check_row + nrow(pollute_data)
+            complete_data_df<-rbind.data.frame(complete_data_df,both_df)
+            complete_summary<- rbind(complete_summary, c(pollute_data[1,"ID"],nrow(both_df),corr_vec))
+        }
+    }
+    
+    test<-complete_summary[,2]>threshold
+    #complete_summary[test] ## TODO: Why the hell does this lose it's matrixness??????
+    threshold_summary<-matrix(complete_summary[test],ncol=3)
+    threshold_summary[,3]
     
 }
     
+
+cr<-corr("specdata",0)
+head(cr)
+summary(cr)
 
 ```
 
@@ -343,7 +386,7 @@ corr <- function(directory, threshold = 0, id = 1:332){
 ```{r}
     directory<-"specdata"
     id<-1:332
-    threshold = 300 ## Currently unused
+    threshold =  150 ## Currently unused
     
     #Fuck about making the adding 00's to numbers <100 then paste with id
     len_00=length(id[id<10])
@@ -354,52 +397,35 @@ corr <- function(directory, threshold = 0, id = 1:332){
     full_id<-paste(zeros,id,sep = "")
 
     #first data set
-    getwd()    
     folder<-paste(getwd(),directory,full_id, sep = "/")
     filename<-paste(folder,"csv", sep=".")
-    
-    # filename # this is a vector of filenames!
-    
-    ## Above here is vectorised, below is not#########
-
-    ##TODO, not sure i really need the if (i==1) loop or if I can 'initialise' another way.
 
     for (i in seq_along(id)) {
         pollute_data<-read.csv(file = filename[i])
         both_df<-pollute_data[(!is.na(pollute_data$sulfate) & !is.na(pollute_data$nitrate))==TRUE,]
+        corr_vec<-cor(both_df$sulfate, both_df$nitrate)
         if(i == 1){
             #full_data_df<-pollute_data
             #check_row<-nrow(pollute_data)
             complete_data_df<-both_df
-            complete_summary <- matrix(c(pollute_data[1,"ID"],nrow(both_df)), nrow=1,ncol=2)   
-            colnames(complete_summary) <- c("id","nobs")
+            complete_summary <- matrix(c(pollute_data[1,"ID"],nrow(both_df),corr_vec), nrow=1,ncol=3) 
+            colnames(complete_summary) <- c("id","nobs", "corr")
         }
         else{
             #full_data_df<-rbind.data.frame(full_data_df,pollute_data)
             #check_row <- check_row + nrow(pollute_data)
             complete_data_df<-rbind.data.frame(complete_data_df,both_df)
-            complete_summary<- rbind(complete_summary, c(pollute_data[1,"ID"],nrow(both_df)))
+            complete_summary<- rbind(complete_summary, c(pollute_data[1,"ID"],nrow(both_df),corr_vec))
         }
     }
-    #TEST IF WE HAVE EQUAL rows i nour data and our data.frame
-    #nrow(full_data_df) == check_row
     
-    # output the summary of compelte data
-    class(complete_summary)    
-    complete_summary
-    
-    ##TODO: i am going to cbind and then filter on threshold - this is probably very inelegant - perhaps i am better off creating a ture/flase vector and then using that to filter the data    
+    test<-complete_summary[,2]>threshold
+    #complete_summary[test] ## TODO: Why the hell does this lose it's matrixness??????
+    threshold_summary<-matrix(complete_summary[test],ncol=3)
+    threshold_summary[,3]
     
     
     
-    
-    
-    complete_summary[complete_summary>threshold]
-    
-    ## Getting a true/false vector and then 'filtering' on that.  
-    complete_summary[,"nobs"]>threshold 
-    
-    complete_data_df[complete_summary[,"nobs"]>threshold]
     
     
     
