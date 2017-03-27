@@ -423,10 +423,7 @@ corr <- function(directory, threshold = 0, id = 1:332){
     #complete_summary[test] ## TODO: Why the hell does this lose it's matrixness??????
     threshold_summary<-matrix(complete_summary[test],ncol=3)
     threshold_summary[,3]
-    
-    
-    
-    
+
     
     
             
