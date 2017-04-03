@@ -56,6 +56,11 @@ best <- function(state,outcome){
   valid_call<-condition_test | state_test ## returns TRUE for an ERROR
 
   ##TODO - WRITE THE STOP LINE TO EXIT THE FUNCTION
+  if (valid_call == TRUE) {
+      stop("Data was wrong") 
+      }
+
+  
   
   #Make my data numeric
   
@@ -77,7 +82,7 @@ best <- function(state,outcome){
   
 }
 
-  best("TX","heart failure")
+  best("TX","hart failure")
 
 ```
 
@@ -141,10 +146,13 @@ state<-"AK"
 condition<-"heart attack"
 conditions<-data.frame( c("heart attack","heart failure","pneumonia"),c(11,17,23))
 
-state_test<-is.na(match(state,outcome$State)) ## returns TRUE for an ERROR
+state_test<-is.na(match(state,outcomes$State)) ## returns TRUE for an ERROR
 condition_test<- is.na(match(condition,conditions[,1])) ## returns TRUE for an ERROR
 
 valid_call<-condition_test | state_test ## returns TRUE for an ERROR
+
+if (valid_call == True) {print("You entering something incorrectly")}
+
 
 
 ```
