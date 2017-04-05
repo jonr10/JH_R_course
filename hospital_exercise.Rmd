@@ -132,7 +132,7 @@ best <- function(state,outcome){
   
   head(order_by_MR)
   
-  rank_it<-rank(order_by_MR[,cond],na.last = TRUE, ties.method = "first")
+    rank_it<-rank(order_by_MR[,cond],na.last = TRUE, ties.method = "first")
   ## this must be easier to do
     order_by_MR<-cbind(order_by_MR,rank_it)
   
