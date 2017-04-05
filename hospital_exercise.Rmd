@@ -86,6 +86,64 @@ best <- function(state,outcome){
 
 ```
 
+#Assignment: Part 3
+
+```{r}
+
+  
+    state = "TX"
+    outcome = "heart failure"
+    
+  ##Read in the data
+  outcomes <- read.csv("hospital_data/outcome-of-care-measures.csv", colClasses = "character")
+
+  ##Set the columns where the data is - and the master list of conditions
+  conditions<-data.frame( c("heart attack","heart failure","pneumonia"),c(11,17,23))
+
+  #find out if the call is valid
+  state_test<-is.na(match(state,outcomes$State)) ## returns TRUE for an ERROR
+  condition_test<- is.na(match(outcome,conditions[,1])) ## returns TRUE for an ERROR
+  valid_call<-condition_test | state_test ## returns TRUE for an ERROR
+
+  ##TODO - WRITE THE STOP LINE TO EXIT THE FUNCTION
+  if (valid_call == TRUE) {
+      stop("Data was wrong") 
+      }
+
+  
+  
+  #Make my data numeric
+  
+  #data<-conditions[,2]
+  ####outcomes[,data]<-as.numeric(outcomes[,data]) ##TODO - why doesn't this work??
+  outcomes[,11]<-as.numeric(outcomes[,11])
+  outcomes[,17]<-as.numeric(outcomes[,17])  
+  outcomes[,23]<-as.numeric(outcomes[,23])
+  
+  # SPLIT BY STATE: THIS IS QUITE RESOURCE INTENSIVE - MIGHT BE BEST NOT TO 'FILTER' ON STATE NAME.
+  outcome_by_state<-split(outcomes, outcomes$State)
+  #PUL OUT THE SELECTED STATE DATA AS A DATA FRAME
+  state_df<-outcome_by_state[[state]]
+  
+  #READY TO 'SORT' - ORDER SEEMS TO BE THE BEST...
+  cond<-conditions[match(outcome,conditions[,1]),2]  
+  order_by_MR<-state_df[order(state_df[,cond],state_df[,2]),]
+  order_by_MR[1,2]
+  
+  head(order_by_MR)
+  
+  rank_it<-rank(order_by_MR[,cond],na.last = TRUE, ties.method = "first")
+  ## this must be easier to do
+    order_by_MR<-cbind(order_by_MR,rank_it)
+  
+    easy_to_read <- cbind(order_by_MR[,2], order_by_MR[,7], order_by_MR[,11], order_by_MR[,17], order_by_MR[,23], order_by_MR[,47])
+  head(easy_to_read)
+
+
+```
+
+
+
 #Sandbox: Part 1 &2
 
 ##Write in the data
