@@ -136,8 +136,13 @@ best <- function(state,outcome){
   ## this must be easier to do
     order_by_MR<-cbind(order_by_MR,rank_it)
   
+    class(conditions[,2])
+    
+    hello<-order_by_MR[,conditions[,2]]
+    
     easy_to_read <- cbind(order_by_MR[,2], order_by_MR[,7], order_by_MR[,11], order_by_MR[,17], order_by_MR[,23], order_by_MR[,47])
   head(easy_to_read)
+
 
 
 ```
